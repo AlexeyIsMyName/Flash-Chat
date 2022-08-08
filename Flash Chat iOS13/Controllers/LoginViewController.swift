@@ -13,13 +13,13 @@ class LoginViewController: UIViewController {
 
     @IBOutlet weak var emailTextfield: UITextField!
     @IBOutlet weak var passwordTextfield: UITextField!
-    
 
     @IBAction func loginPressed(_ sender: UIButton) {
         if let email = emailTextfield.text, let password = passwordTextfield.text {
             Auth.auth().signIn(withEmail: email, password: password) {authResult, error in
                 if let e = error {
                     print(e)
+                    self.showAlert(title: "Error", message: e.localizedDescription)
                 } else {
                     // Navigate to the ChatViewController
                     self.performSegue(withIdentifier: K.loginSegue, sender: self)
@@ -27,5 +27,23 @@ class LoginViewController: UIViewController {
             }
         }
     }
-    
+}
+
+// MARK: - Alert Controller
+extension LoginViewController {
+    private func showAlert(title: String,
+                           message: String,
+                           buttonHandler: ((UIAlertAction) -> Void)? = nil) {
+        let alert = UIAlertController(title: title,
+                                      message: message,
+                                      preferredStyle: .alert)
+        
+        let alertAction = UIAlertAction(title: "OK",
+                                        style: .default,
+                                        handler: buttonHandler)
+        
+        alert.addAction(alertAction)
+        
+        present(alert, animated: true)
+    }
 }
